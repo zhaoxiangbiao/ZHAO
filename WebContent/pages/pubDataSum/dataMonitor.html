@@ -1,0 +1,585 @@
+<!-- BEGIN PAGE CONTENT-->
+<!-- BEGIN ROW CONTENT-->
+<style>
+#id-date-picker-1 ,#id-date-picker-2{
+	width:120px;margin-right:20px;font-size: 13px;color: #858585;background-color: #fbfbfb;border: 1px solid #d5d5d5; padding: 6px 12px;
+}
+.modal-backdrop.in{
+	opacity: .5;
+	background-color: #000;
+}
+body, body.modal {
+    padding-right: 0 !important;
+}
+body.modal-open{
+	overflow: visible;
+}
+
+body.modal {
+    overflow-y: hidden;
+}
+.bs-dataMonitor-modal-lg table td{
+	padding: 5px !important;
+}
+.bs-dataMonitor-modal-lg table th{
+	padding: 6px !important;
+	font-weight: 600 !important;
+	text-align: center;
+
+}
+.onViewTr{
+	background-color:#f5f5f5;
+}
+
+tr.hour_data td{
+	font-size: 10px;
+	text-align: center;
+	padding-right:10px !important;
+}
+tr.hour_data td.center{
+	text-align: center;
+}
+tr.hour_data td.green{
+	color:green !important;
+}
+.bs-dataMonitor-modal-lg tr.hour_data td.border,.bs-dataMonitor-modal-lg th.border{	
+	border-right-width: 2px;
+}
+
+.center {
+	text-align: center;
+}
+.datepicker.dropdown-menu{
+	z-index: 10000
+}
+
+
+</style>
+
+<div class="row">
+	<div class="col-md-12">
+		<div class="widget-header bordered-bottom  bordered-lightred">
+                <i class="widget-icon fa fa-tasks "></i>
+                <span class="widget-caption ">数据实时对比</span>       
+				<div id="page-params"   style="background: #fff; border: 0px solid #ccc;padding:5px;margin:0px">
+					<select name="pub_id" id="pub" onchange="onSelectChange(this,'site','2');">
+					</select>
+					<select name="site_id" id="site" onchange="onSelectChange(this,'slot','3');" style="width:120px;margin-right:50px" >
+					<option value="">全部站点</option>
+					</select>
+					<select name="slot_id" id="slot" style="width:200px;margin-right:50px" >
+					<option value="">全部广告位</option>
+					</select>	
+					<span class=""> <i class="fa fa-calendar"></i> </span>&nbsp; 
+					<input class="date-picker" id="id-date-picker-1" type="text" name="date1"  value="2015-12-20 16" style="margin-right: 10px;">
+					对比
+					<input class="date-picker" id="id-date-picker-2" type="text" name="date2" value="2015-12-19 16">
+					&nbsp;&nbsp;	
+
+					<button type="button " class="btn btn-primary btn-sm" id="query-btn" >
+                            查询
+                    </button>
+					&nbsp;&nbsp;&nbsp;&nbsp;
+					<div class="btn-group">
+                        <button type="button" class="btn btn-default btn-sm" onclick="currHourClick()">
+                            当前小时
+                        </button>
+                        <button type="button" class="btn btn-default btn-sm" onclick="lastHourClick()">
+                            上一小时
+                        </button>                        
+                    </div>  
+                    &nbsp;&nbsp;     
+          		</div>
+           <!--Widget Header-->
+		</div>
+		<div class="widget-body">
+			<table class="table table-condensed table-bordered table-hover " id="data_table_ssp_logs_adSspDataCount_2"></table>
+		</div>
+		
+	</div>
+	<!--LArge Modal Templates-->
+    <div class="modal fade bs-dataMonitor-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog modal-lg modal-primary">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title" id="myLargeModalLabel">整日数据对比</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row" style="margin:0px">                   
+						<div id="page-params2"   style="text-align: right; #ccc;padding:0px 5px 10px;margin:0px">
+							<span id="modal-title" style="font-weight: 600;padding-right: 20px;font-size: 14px;"></span>
+							<input type="hidden" id="id-slot_id" value="">						
+							<span class=""> <i class="fa fa-calendar"></i> </span>&nbsp; 
+							<input class="date-picker" id="id-date-picker-3" type="text" name="date1" data-date-format="yyyy-mm-dd" value="2015-12-21" style="width:80px">
+							对比
+							<input class="date-picker" id="id-date-picker-4" type="text" name="date2" data-date-format="yyyy-mm-dd" value="2015-12-20" style="width:80px">
+							&nbsp; &nbsp;
+							<button type="button " class="btn btn-primary btn-sm" onclick="modalQueryBtnClick()"  style="margin-right:10px;">
+                           		查询
+                    		</button>      
+			      		</div>
+					</div>
+					<div class="row" style="margin:0px">     
+						<table class="table table-hover table-bordered ">
+                            <thead>
+                                <tr>
+                                    <th rowspan=2> 小时</th>
+                                    <th colspan=3 class="border"> 请求</th><th colspan=3 class="border"> 展示</th><th colspan=3>点击</th>
+                                </tr>
+                                <tr>                                   
+                                    <th data-name='date1'></th><th data-name='date2'></th><th class="border">变化</th>
+                                    <th data-name='date1'></th><th data-name='date2'></th><th class="border">变化</th>
+                                    <th data-name='date1'></th><th data-name='date2'></th><th >变化</th>                                    
+                                </tr>
+                            </thead>
+                            <tbody>
+                                                                     
+                            </tbody>
+                        </table>
+					</div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn " data-dismiss="modal">关闭</button>
+                    
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div>
+    <!--End Large Modal Templates-->
+	
+</div>
+
+<link rel="stylesheet" href="/assets/js/datetime/jquery.datetimepicker.css" media="screen">
+<script src="/assets/js/datetime/jquery.datetimepicker.js"></script>
+		
+
+
+<script type="text/javascript">
+
+	function onSelectChange(obj,toSelId,level){
+		//alert(obj.value);
+		if(obj.value!=""){
+			setSelect(obj.value,toSelId,level);
+		}else{
+			//alert(toSelId);	
+			var defaultvalue="";
+			if(level==1){
+				defaultvalue="全部媒体";
+			}else if(level==2){
+				defaultvalue="全部站点";
+			}else if(level==3){
+				defaultvalue="全部广告位";
+			}
+			 
+			var obj = document.getElementById(toSelId);
+			obj.innerHTML="";
+			var nullOp = document.createElement("option");
+			nullOp.setAttribute("value","");
+			nullOp.appendChild(document.createTextNode(defaultvalue));
+			obj.appendChild(nullOp);		
+		
+			if(level==2){
+				var objslot = document.getElementById("slot");
+				objslot.innerHTML="";
+				var nullOpslot = document.createElement("option");
+				nullOpslot.setAttribute("value","");
+				nullOpslot.appendChild(document.createTextNode(defaultvalue));
+				objslot.appendChild(nullOpslot);
+			}
+		
+		}
+		
+	}
+
+
+	function setSelect(fromSelVal,toSelId,level){ 	
+	 
+		jQuery.ajax({
+		  url: "/ssp/logs/adCountPub/listPub",
+		  cache: false,
+		  data:"parentid="+fromSelVal+"&level="+level,
+		  success: function(data){
+		  	document.getElementById(toSelId).innerHTML="";
+		    createSelectObj(data,toSelId,level);
+		  }
+		});
+	}
+
+	function createSelectObj(data,toSelId,level){
+		
+		var arr = jsonParse(data);
+		if(arr != null && arr.length>0){
+			var defaultvalue="";
+			if(level==1){
+				defaultvalue="全部媒体";
+			}else if(level==2){
+				defaultvalue="全部站点";
+			}else if(level==3){
+				defaultvalue="全部广告位";
+			}
+			
+			var obj = document.getElementById(toSelId);
+			obj.innerHTML="";
+			var nullOp = document.createElement("option");
+			nullOp.setAttribute("value","");
+			nullOp.appendChild(document.createTextNode(defaultvalue));
+			obj.appendChild(nullOp);
+			for(var o in arr){
+				var op = document.createElement("option");
+				op.setAttribute("value",arr[o].id);
+				//op.text=arr[o].name;//这一句在ie下不起作用，用下面这一句或者innerHTML
+				op.appendChild(document.createTextNode(arr[o].name));
+				obj.appendChild(op);
+			}
+			
+		}
+	}
+
+
+</script>
+
+
+<script>//页面表格
+	var domain_api = "http://182.92.182.4:8081";
+	domain_api = "";
+
+	$(document).ready(function() {
+		date1 = moment().format("YYYY-MM-DD HH");
+		date2 = moment().subtract(1,"days").format("YYYY-MM-DD HH");
+		$('#id-date-picker-1').val(date1)
+		$('#id-date-picker-2').val(date2)
+
+		$('#page-params2 .date-picker').datepicker();
+
+		$("#page-params .date-picker").datetimepicker({
+	      lang:'ch',
+	      format:'Y-m-d H',
+	      maxDate:'+1970/01/01'	      
+	    });
+
+	 	setSelect('0','pub','1');
+
+	 	function queryParams(d){
+	 		column = d.columns[d.order['0']['column']]
+	 		if(column['orderable']){
+	 			o = column['data'];
+	 			desc = d.order[0]['dir'];
+	 			d["o"] = o;
+	 			d["desc"] = desc;
+	 		}	
+	 		d.columns = {};	
+	 		p = $("#page-params input,#page-params select").serializeArray();
+	 		k = ""
+	 		$.each(p,function(){
+	 			k==""? k += this.name : k += ","+this.name;
+	 			d[this.name] = this.value;
+	 		})
+	 		//d.k = k;	
+	 		d.iDisplayLength = d.length;
+	 		d.iDisplayStart = d.start;
+	 		md1 = moment(d.date1);
+	 		md2 = moment(d.date2);
+	 		d.date1 = md1.format("YYYY-MM-DD")
+	 		d.date2 = md2.format("YYYY-MM-DD")		 	
+	 		d.hour1 = md1.hour();
+	 		d.hour2 = md2.hour();
+	 	}
+
+	 	function createDataTable(url,tableid){
+			tableid = $("#tableid").val() || tableid;
+			return $('#'+tableid)
+			.on('xhr.dt', function ( e, settings, json, xhr ) {
+					if(json.status == 0 && json.msg =="completed" ){
+				        json.aaData = json.data.aaData;
+				        json.iDisplayLength = json.data.iDisplayLength;
+						json.iDisplayStart = json.data.iDisplayStart;
+						json.iTotalDisplayRecords = json.data.iTotalDisplayRecords;
+						json.iTotalRecords = json.data.iTotalRecords;
+					}else{
+						json.sEcho = null;
+						json.aaData = [];
+						json.iDisplayLength = 10;
+						json.iDisplayStart = 1;
+						json.iTotalDisplayRecords = 0;
+						json.iTotalRecords = 0;
+
+					}
+			    })
+			.dataTable( {
+				"multiselect":true,
+				"bProcessing": false, //当datatable获取数据时候是否显示正在处理提示信息。
+				"bServerSide": true, //服务端处理数据
+				"bSort" :true,
+				"ajax": {
+				    "url": url,
+				    "dataSrc":"aaData",
+				    "data": queryParams
+				},
+				"drawCallback": function( settings ) {Notify('查询成功', 'top-right', '100', 'success', 'fa-check', true);},
+				"bLengthChange": false,
+				"bFilter":false,
+				"iDisplayLength":10,
+				"oLanguage": {	 		
+						"sProcessing" : "正在加载数据...",
+		              	"sLengthMenu": "每页显示  _MENU_ 条记录",  
+		              	"sInfo": "从 _START_ 到 _END_ /共 _TOTAL_ 条数据",
+		              	"oPaginate": {
+		                	"sFirst": "首页",
+		                	"sPrevious": "前一页",
+		                	"sNext": "后一页",
+		                	"sLast": "尾页"
+		                },
+						"sInfoFiltered": "数据表中共为 _MAX_ 条记录", 
+		              	"sZeroRecords": "抱歉， 没有找到",
+		              	"sInfoEmpty": "没有数据"
+		            },
+		            "order": [ 3, 'desc' ],		            
+					"aoColumns": [	
+						{ "sTitle":"媒体","mData": "pub_name"},
+						{ "sTitle":"广告位","mData": "slot_name"},
+						{ "sTitle":"上1小时变化","width":"150px","mData": "lasthour_request_count","className":"center",render:function(val,c,d){
+							v = val == 0 ? 100 : ((d.request_count-val)*100 / val).toFixed(2);
+							c = d.request_count > val ?"red":"green";
+							return "<span class='"+c+"'>"+v+"</span>";
+						}},
+						{ "sTitle":date1,"mData": "request_count","width":"150px","className":"center"},
+						{ "sTitle":date2,"mData": "request_count_hour_2","orderable":false,"width":"150px","className":"center"},
+						
+						{ "sTitle":"变化数值","mData": "request_count","orderable":false,"width":"150px","className":"center",render:function(val,c,d){
+							v = val - d.request_count_hour_2;
+							c = val > d.request_count_hour_2 ?"red":"green";
+							return "<span class='"+c+"'>"+v+"</span>";
+						}},
+						{ "sTitle":"变化比例","mData": "request_count","orderable":false,"width":"150px","className":"center",render:function(val,c,d){
+							v = d.request_count_hour_2 == 0 ? 100 : ((val - d.request_count_hour_2)*100 / d.request_count_hour_2).toFixed(2);
+							c = val > d.request_count_hour_2 ?"red":"green";
+							return "<span class='"+c+"'>"+v+"</span>";
+
+						}},
+						{ "sTitle":"操作","orderable":false,"className":"center",render:function(val){						
+							s = '<a href="javascript:void(0)" onclick="openDetail(this)">整日数据</a>';
+							return s;
+							}
+						},
+
+	                ]
+		
+			} );
+		}
+
+		window.otable2 = createDataTable(domain_api+"/Platform/executejs?pageid=C6C7B0F76F700001B697130D178HJ7D6","data_table_ssp_logs_adSspDataCount_2")
+		$("#page-params #query-btn").click(function( event ) {
+			 fnDraw()    
+		});
+	});  
+	function fnDraw(){
+		$("#data_table_ssp_logs_adSspDataCount_2 th:eq(3)").text($('#id-date-picker-1').val());
+		$("#data_table_ssp_logs_adSspDataCount_2 th:eq(4)").text($('#id-date-picker-2').val());
+		otable2.fnDraw();   
+	}
+	function currHourClick(){
+		$('#id-date-picker-1').val(moment().format("YYYY-MM-DD HH"))
+		$('#id-date-picker-2').val(moment().subtract(1,"days").format("YYYY-MM-DD HH"))
+		fnDraw();
+	}  
+	function lastHourClick(){
+		$('#id-date-picker-1').val(moment().subtract(1,"hours").format("YYYY-MM-DD HH"))
+		$('#id-date-picker-2').val(moment().subtract(1,"days").subtract(1,"hours").format("YYYY-MM-DD HH"))
+		fnDraw();
+	}
+</script>
+
+<script>//弹出层
+
+	//页面点击事件
+	function openDetail(obj){
+	 	data = otable2.fnGetData($(obj).parents("tr")[0]);
+	 	$(".onViewTr").removeClass("onViewTr");
+	 	$(obj).parents("tr").addClass("onViewTr");
+	 	modalParams = {};
+	 	modalParams.date1 = moment(data.date1).format("YYYY-MM-DD");
+
+	 	modalParams.date2 = moment(data.date2).format("YYYY-MM-DD");
+	 	modalParams.slot_id = data.slot_id;
+	 	modalParams.pub_name = data.pub_name;
+	 	modalParams.slot_name = data.slot_name;
+	 	
+	 	d = modalParams;
+
+	 	modalQueryExec(d);	
+
+		$("#modal-title").text(d.pub_name+"  "+d.slot_name)
+		$('.bs-dataMonitor-modal-lg #id-slot_id').val(d.slot_id);
+
+		$('.bs-dataMonitor-modal-lg #id-date-picker-3').val(d.date1);
+		$('.bs-dataMonitor-modal-lg #id-date-picker-4').val(d.date2);
+
+		$('.bs-dataMonitor-modal-lg').modal({backdrop:false})	
+	} 
+
+	//弹窗查询按钮
+	function modalQueryBtnClick(){
+		p={};
+		p.slot_id = $(".bs-dataMonitor-modal-lg #id-slot_id").val();
+		p.date1 = $(".bs-dataMonitor-modal-lg #id-date-picker-3").val();
+		p.date2 = $(".bs-dataMonitor-modal-lg #id-date-picker-4").val();
+		modalQueryExec(p);
+	}
+
+	var dataSet =[]
+ 	for (i = 0;i<24;i++){
+ 		d = {hour:i}
+ 		dataSet.push(d);
+ 	}
+
+	var trHtml = "<tr id='trid' class='hour_data'><td data-name='hour' class='center'>#hour</td> <td data-name='request1'></td> <td data-name='request2'></td><td data-name='request3' class='border'></td> <td data-name='show1'></td> <td data-name='show2'></td> <td data-name='show3' class='border'></td> <td data-name='click1'></td> <td data-name='click2'></td><td data-name='click3'></td></tr>";
+
+	/*
+	*生成弹窗页面结构
+	*根据查询条件，获取数据，更新
+	*/
+	function modalQueryExec(p){
+		$(".bs-dataMonitor-modal-lg table th[data-name='date1']").text(p.date1);
+		$(".bs-dataMonitor-modal-lg table th[data-name='date2']").text(p.date2);
+
+		tbody = $(".bs-dataMonitor-modal-lg table tbody");
+
+		if($("tr",tbody).length > 0){//已创建，置空
+			$("tr",tbody).each(function(j){
+				$("td:gt(0)",this).text("").removeClass("red").removeClass("green");
+			});
+		}else{//新创建
+			for (i = 0;i<dataSet.length;i++){			
+				trHtmlTemp = trHtml.substr(0);
+				trHtmlTemp = trHtmlTemp.replace("trid","trid_"+i);
+				trHtmlTemp = trHtmlTemp.replace("#hour",i);
+				tbody.append(trHtmlTemp);				
+			}	
+			trHtmlTemp = trHtml.substr(0);
+			trHtmlTemp = trHtmlTemp.replace("trid","trid_"+100);
+			trHtmlTemp = trHtmlTemp.replace("#hour","时段和");
+			tbody.append(trHtmlTemp);
+			trHtmlTemp = trHtml.substr(0);
+			trHtmlTemp = trHtmlTemp.replace("trid","trid_"+200);
+			trHtmlTemp = trHtmlTemp.replace("#hour","总计");
+			tbody.append(trHtmlTemp);
+		}
+
+
+		var ajax_get_num = 0;
+		var max_hour1 = 0;
+		var max_hour2 = 0;
+		var request1_sum = 0,request2_sum = 0,request1_sum_all = 0,request2_sum_all = 0;
+		var show1_sum = 0,show2_sum = 0,show1_sum_all = 0,show2_sum_all = 0;
+		var click1_sum = 0,click2_sum = 0,click1_sum_all = 0,click2_sum_all = 0;
+		//求比例与总计
+		var computePer = function(){
+			ajax_get_num ++;			
+			if(ajax_get_num == 2){
+				max = max_hour1 <= max_hour2 ? max_hour1 :max_hour2;
+				for (i = 0;i<dataSet.length;i++){	
+					$tr = $("#trid_"+i);
+					css = ""
+
+					r1 = $("td[data-name='request1']",$tr).text()*1;	
+					r2 = $("td[data-name='request2']",$tr).text()*1;	
+					p1 =  r1== 0 || r2==0 ? "" : ( (r1-r2)*100 /r2 ).toFixed(2);
+					
+					r1 > r2 ? css = "red" :css = "green";					
+					$("td[data-name='request3']",$tr).addClass(css).text( p1 );
+
+					
+					s1 = $("td[data-name='show1']",$tr).text()*1;	
+					s2 = $("td[data-name='show2']",$tr).text()*1;	
+					p2 =  s1 == 0 || s2==0 ? "" : ( (s1-s2)*100/s2 ).toFixed(2);
+
+					s1 > s2  ? css = "red" :css = "green";
+					$("td[data-name='show3']",$tr).addClass(css).text( p2 );
+
+					
+					c1 = $("td[data-name='click1']",$tr).text()*1;	
+					c2 = $("td[data-name='click2']",$tr).text()*1;					
+					p3 = c1 == 0 || c2==0? "" : ( (c1-c2)*100/c2 ).toFixed(2);
+
+					c1 > c2 ? css = "red" :css = "green";
+					$("td[data-name='click3']",$tr).addClass(css).text( p3 );
+
+					//求和
+					request1_sum_all += r1;request2_sum_all+=r2;
+					show1_sum_all += s1;show2_sum_all+=s2;
+					click1_sum_all += c1;click2_sum_all+=c2;
+					if(i<=max){
+						request1_sum += r1;request2_sum+=r2;
+						show1_sum += s1;show2_sum+=s2;
+						click1_sum += c1;click2_sum+=c2;
+					}
+				}	
+			
+				//总和赋值
+				$tr = $("#trid_100");
+				$("td[data-name='request1']",$tr).text(request1_sum);	
+				$("td[data-name='request2']",$tr).text(request2_sum);
+				p = request1_sum== 0 || request2_sum==0 ? "" : ( (request1_sum-request2_sum) *100/request2_sum ).toFixed(2);
+				$("td[data-name='request3']",$tr).addClass( request1_sum/request2_sum>1 ? "red" : "green").text(p);
+
+				$("td[data-name='show1']",$tr).text(show1_sum);	
+				$("td[data-name='show2']",$tr).text(show2_sum);
+				p = show1_sum== 0 || show2_sum==0 ? "" : ( (show1_sum-show2_sum) *100/show2_sum ).toFixed(2);
+				$("td[data-name='show3']",$tr).addClass( show1_sum/show2_sum >1 ? "red" : "green").text(p);
+
+				$("td[data-name='click1']",$tr).text(click1_sum);	
+				$("td[data-name='click2']",$tr).text(click2_sum);
+				p = click1_sum== 0 || click2_sum==0 ? "" : ( (click1_sum-click2_sum) *100/click2_sum ).toFixed(2);
+				$("td[data-name='click3']",$tr).addClass( click1_sum /click2_sum > 1? "red" : "green").text(p);
+
+				$tr = $("#trid_200");
+				$("td[data-name='request1']",$tr).text(request1_sum_all);	
+				$("td[data-name='request2']",$tr).text(request2_sum_all);
+				p = request1_sum_all== 0 || request2_sum_all==0 ? "" : ( (request1_sum_all-request2_sum_all) *100/request2_sum_all ).toFixed(2);
+				$("td[data-name='request3']",$tr).addClass( request1_sum_all /request2_sum_all >1 ? "red" : "green").text(p);
+
+				$("td[data-name='show1']",$tr).text(show1_sum_all);	
+				$("td[data-name='show2']",$tr).text(show2_sum_all);
+				p = show1_sum_all== 0 || show2_sum_all==0 ? "" : ( (show1_sum_all-show2_sum_all) *100/show2_sum_all ).toFixed(2);
+				$("td[data-name='show3']",$tr).addClass( show1_sum_all /show2_sum_all >1 ? "red" : "green").text(p);
+
+				$("td[data-name='click1']",$tr).text(click1_sum_all);	
+				$("td[data-name='click2']",$tr).text(click2_sum_all);
+				p = click1_sum_all== 0 || click2_sum_all==0 ? "" : ( (click1_sum_all-click2_sum_all) *100/click2_sum_all ).toFixed(2);
+				$("td[data-name='click3']",$tr).addClass( click1_sum_all /click2_sum_all > 1 ? "red" : "green").text(p);
+
+			}
+		}
+		
+		url = domain_api+"/Platform/readrow?dataType=detail&pageid=C6C7B0F76F700001B697130D178HJ785";
+		//第一个日期数据
+		$.getJSON(url,{slot_id:p.slot_id,statdate:p.date1,k:"slot_id,statdate",o:"hour",desc:"asc"},function(d){
+			if (d.status == 0){
+				$(d.data).each(function(i){
+					$tr = $("#trid_"+this.hour);
+					$("td[data-name='request1']",$tr).text(this.request_count);
+					$("td[data-name='show1']",$tr).text(this.show_count);
+					$("td[data-name='click1']",$tr).text(this.click_count);
+					if(this.hour > max_hour1) max_hour1 = this.hour;
+				});				
+			}
+			computePer();
+		});
+		//第二个日期数据
+		$.getJSON(url,{slot_id:p.slot_id,statdate:p.date2,k:"slot_id,statdate",o:"hour",desc:"asc"},function(d){
+			if (d.status == 0){
+				$(d.data).each(function(i){
+					$tr = $("#trid_"+this.hour);
+					$("td[data-name='request2']",$tr).text(this.request_count);
+					$("td[data-name='show2']",$tr).text(this.show_count);
+					$("td[data-name='click2']",$tr).text(this.click_count);
+					if(this.hour > max_hour2) max_hour2 = this.hour;
+				})
+			}
+			computePer();
+		});
+	}
+
+</script>

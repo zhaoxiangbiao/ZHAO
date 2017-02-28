@@ -1,0 +1,47 @@
+@charset "utf-8";
+/* CSS Document */
+
+.checkboxOne {
+	 display:inline-block;
+/*	 float:left;
+	width: 35px;
+	height: 14px;
+	background: #ed6c00;
+	margin-top:3px;
+	position: relative;
+	border-radius: 7px;*/
+	
+	background:url(../images/checked01.png) center center no-repeat;
+	width:28px; height:28px;
+}
+
+/*.checkboxOne label {
+    
+	display: block;
+	width: 16px;
+	height: 16px;
+	border-radius: 50%;
+ 
+	-webkit-transition: all .3s ease;
+	-moz-transition: all .3s ease;
+	-o-transition: all .3s ease;
+	-ms-transition: all .3s ease;
+	transition: all .3s ease;
+	cursor: pointer;
+	position: absolute;
+	top: -1px;
+	left: -3px;
+	box-shadow:0 0 10px #bbb;
+ 
+	background: #fdfdfd;
+}
+
+.checkboxOne input[type=checkbox]:checked + label {
+	left: 21px;
+	
+}*/
+
+
+
+
+.rember{ display:inline-block; width:80px; height:25px; float:left;}

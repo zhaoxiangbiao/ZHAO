@@ -1,0 +1,166 @@
+@charset "utf-8";
+/* CSS Document */
+
+*{ margin:0; padding:0; border:0;}
+.contain{width:100%; position:relative;font-family:"微软雅黑"; font-size:14px; color:#6e6d6d; overflow:hidden;}
+*{ -webkit-tap-highlight-color: rgba(0,0,0,0);-webkit-tap-highlight-color: transparent; /* For some Androids */ } /*去除移动设备上点击按钮的蓝色阴影*/ 
+
+
+
+.bg{ display:block;}
+.top,.content,.footer{ position:absolute; width:100%;text-align:center;}
+.top{left:0; top:0;}
+.top img{ display:block; text-align:center; margin:1% auto;}
+
+
+.img{ width:177px; height:242px; position:absolute;}
+.img img{ display:block;}
+.data{ left:16%; top:20.5%;}
+.accurate{left:24%; top:47%;}
+.marketing{right:20%;top:33%;}
+
+
+
+
+.content1{ width:33%;height: 75%;  margin:0 auto;position: absolute;left: 33.5%; top: 12.5%;}
+.content1 .login_bg2{ display:block; width:100%; position:absolute; left:0; top:0;}
+.content {position: absolute;left: 5%; top: 25%; height: 55%; width:90%;}
+.content .box { width: 100%;margin: 0 auto;position: relative;}
+.content .box form{ width:80%; margin:0 auto;}
+.content .box .txtbox{ display:inline-block; width:85%;margin:15px auto 10px; position:relative; height:30px;border-bottom:1px solid #d3d3d4;}
+.content .box .txtbox span{ float:left; font-size:16px; color:#507a87;}
+.content .box .txtbox .sign{ float:right; color:#f55c33;}
+.content .box .txtbox.code{ width:60%; float:left; margin-left:7.5%;}
+.content .box .code .sign{ float:right; color:#f55c33; position:absolute;bottom:5px;right:0;}
+.content .box .code_img{position:absolute; right: -40%; bottom:0; height:40px; line-height:40px;}
+.content .box .txtbox .txt{ padding-left:10px; font-size:16px;}
+.content .box .txtbox .txt input{ outline:none;}
+
+
+.content .box .point{ height:12px; width:85%; margin:0 auto;}
+.content .box .pass{ margin-top:20px;}
+.content .box .pass .checkboxOne{ float:left;}
+.content .box .pass .forget{ float:right;}
+.content .box .pass .forget a{cursor: pointer;}
+.content .box .point{ clear:both;}
+.content .box .point p{ font-size:12px; text-align:left;line-height:12px; color:#b5b5b6;}
+
+.content .box .but{ width:50%; height:44px;margin:50px auto; text-align:center;}
+.content .box .submit{ display:block; width:100%; height:44px;background:#f55c33;border-radius:22px; outline:none; font-size:18px; color:#FFF;line-height:44px; text-align:center;cursor: pointer; font-family:"微软雅黑"; word-spacing:10px; box-shadow:0 1px 8px #d99a89;-moz-box-shadow:0 1px 8px #d99a89;-webkit-box-shadow:0 1px 8px #d99a89;}
+.content .box .submit:active{background:#fc7301; }
+
+
+::-moz-placeholder { color: #b5b5b6; }
+::-webkit-input-placeholder { color:#b5b5b6;}
+:-ms-input-placeholder { color:#b5b5b6; }
+.content .login_bg2 .box .txtbox .txt input:focus::-webkit-input-placeholder,textarea:focus::-webkit-input-placeholder{color:transparent; }
+input:-webkit-autofill{
+   -webkit-box-shadow: 0 0 0 1000px #fff inset !important;/*去除记住密码自动登录时谷歌input出现的黄色阴影框*/
+}
+
+
+.mui-switch{visibility: hidden;}
+
+
+.footer{left:0;bottom:8%;}
+
+
+
+
+@media screen and (width:1024px) and (height:768px){
+	
+.top img{ display:block; text-align:center; margin:3% auto;}
+.img img{ display:block; width:80%;margin:0 auto}	
+.data{ left:10%; top:20%;}
+.accurate{left:15%; top:46%;}
+.marketing{right:10%;top:33%;}
+
+.content1{ width:43%;height: 75%;  margin:0 auto;position: absolute;left: 28%; top: 20%;}
+.content1 .login_bg2{ display:block; width:100%; position:absolute; left:0;}
+.content {position: absolute;left: 5%; top:20%; height: 55%; width:90%;}
+.content .box .txtbox{ display:inline-block; width:85%;margin:10px auto 5px; position:relative; height:30px;border-bottom:1px solid #d3d3d4;}
+.content .box .txtbox .code_img{ position:absolute;right:-40%;}
+.content .box .code .txt{width:60%;}
+.content .box .but{ height:38px;}
+.content .box .submit{ height:38px;border-radius:19px;line-height:38px;}
+}
+
+
+
+@media screen and (width:1280px) and (height:800px){
+	
+.top img{ display:block; text-align:center; margin:3% auto;}
+.img img{ display:block; width:80%;margin:0 auto}	
+.data{ left:10%; top:20%;}
+.accurate{left:19%; top:46.5%;}
+.marketing{right:15%;top:33%;}
+
+.content1{ width:38%;height: 75%;  margin:0 auto;position: absolute;left: 30.5%; top: 17%;}
+.content1 .login_bg2{ display:block; width:100%; position:absolute; left:0;}
+.content {position: absolute;left: 5%; top:22%; height: 55%; width:90%;}
+.content .box .txtbox{ display:inline-block; width:85%;margin:10px auto 5px; position:relative; height:30px;border-bottom:1px solid #d3d3d4;}
+.content .box .txtbox .code_img{ position:absolute;right:-40%;}
+.content .box .code .txt{width:70%;}
+.content .box .but{ height:38px;}
+.content .box .submit{ height:38px;border-radius:19px;line-height:38px;}
+}
+
+
+@media screen and (min-width:1281px) and (max-width:1440px){
+	
+.top img{ display:block; text-align:center; margin:3% auto;}
+.img img{ display:block; width:90%; margin:0 auto;}	
+.data{ left:10%; top:20%;}
+.accurate{left:19%; top:46.5%;}
+.marketing{right:18%;top:34%;}
+
+.content1{ width:38%;height: 75%;  margin:0 auto;position: absolute;left: 30.5%; top: 17%;}
+.content1 .login_bg2{ display:block; width:100%; position:absolute; left:0;}
+.content {position: absolute;left: 5%; top:24%; height: 55%; width:90%;}
+.content .box .txtbox{ display:inline-block; width:85%;margin:10px auto 5px; position:relative; height:30px;border-bottom:1px solid #d3d3d4;}
+.content .box .txtbox .code_img{ position:absolute;right:-40%;}
+.content .box .code .txt{width:70%;}
+.content .box .but{ height:38px;}
+.content .box .submit{ height:38px;border-radius:19px;line-height:38px;}	
+	
+	}
+	
+@media screen and (min-width:1441px) and (max-width:1660px){
+	
+.top img{ display:block; text-align:center; margin:3% auto;}
+.img img{ display:block;}	
+.data{ left:10%; top:20%;}
+.accurate{left:19%; top:46.5%;}
+.marketing{right:18%;top:33%;}
+
+.content1{ width:35%;height: 75%;  margin:0 auto;position: absolute;left: 32.5%; top: 18.5%;}
+.content1 .login_bg2{ display:block; width:100%; position:absolute; left:0;}
+.content {position: absolute;left: 5%; top:24%; height: 55%; width:90%;}
+.content .box .txtbox{ display:inline-block; width:85%;margin:10px auto 5px; position:relative; height:30px;border-bottom:1px solid #d3d3d4;}
+.content .box .txtbox .code_img{ position:absolute;right:-40%;}
+.content .box .code .txt{width:70%;}	
+	
+	}	
+	
+
+@media screen and (width:768px) and (height:1024px){
+	
+.top img{ display:block; text-align:center; margin:15% auto 0;}
+.img img{ display:block; width:80%;margin:0 auto;}	
+.data{ left:1%; top:26%;}
+.accurate{left:1%; top:54%;}
+.marketing{right:1%;top:40%;}
+
+.content1{ width:60%;height: 55%;  margin:0 auto;position: absolute;left: 20%; top: 35%;}
+.content1 .login_bg2{ display:block; width:100%; position:absolute; left:0;}
+.content {position: absolute;left: 5%; top:20%; height: 55%; width:90%;}
+.content .box .txtbox{ display:inline-block; width:85%;margin:10px auto 5px; position:relative; height:30px;border-bottom:1px solid #d3d3d4;}
+.content .box .txtbox .code_img{ position:absolute;right:-40%;}
+.content .box .code .txt{width:60%;}
+.content .box .but{ height:38px;}
+.content .box .submit{ height:38px;border-radius:19px;line-height:38px;}
+}
+	
+	
+.code_img{ width: 100px;}	
+	

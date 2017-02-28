@@ -1,0 +1,198 @@
+<!-- BEGIN PAGE CONTENT-->
+<!-- BEGIN ROW CONTENT-->
+<div class="data-div">
+<div class="row">
+	<div class="col-md-12">
+		<div class="widget-header bordered-bottom  bordered-lightred">
+                <i class="widget-icon fa fa-tasks "></i>
+                <span class="widget-caption ">媒体数据汇总</span>       
+			<form class="form-inline" role="form" onsubmit="return false;" id="form_data_table_ssp_logs_adSspDataCount_1">
+				<div id="page-params"   style="background: #fff; border: 0px solid #ccc;padding:5px;margin:0px">
+					<select name="filter_EQI_pub_id" id="pub" onchange="onSelectChange(this,'site','2');" style="width:180px;margin-right:5px">
+					</select>
+					<select name="filter_EQI_site_id" id="site" onchange="onSelectChange(this,'slot','3');" style="width:180px;margin-right:5px" >
+					<option value="">全部站点</option>
+					</select>
+					<select name="filter_EQI_slot_id" id="slot" style="width:180px;margin-right:5px">
+					<option value="">全部广告位</option>
+					</select>	
+					<span class=""> <i class="fa fa-calendar"></i> </span>&nbsp; 
+					<input class="date-picker" id="id-date-picker-2" type="text" name="filter_EQD_stat_date" data-date-format="yyyy-mm-dd" 
+					style="width:140px;margin-right:10px;font-size: 13px;color: #858585;background-color: #fbfbfb;border: 1px solid #d5d5d5; padding: 6px 12px;" value="2015-11-21">
+					 
+				<button id="list_query_btn" href="javascript:;" class="btn btn-blue btn-xs search"  data-title="查询" data-form="true">查询</button>
+          		</div>
+          		</form>
+				                     
+           <!--Widget Header-->
+		</div>
+		
+		<div class="widget-body">
+			<table class="table table-condensed table-bordered table-hover " id="data_table_ssp_logs_adSspDataCount_1"></table>
+		</div>
+		
+	</div>
+</div>
+</div>		
+ 
+<script type="text/javascript">
+
+	function onSelectChange(obj,toSelId,level){
+		//alert(obj.value);
+		if(obj.value!=""){
+			setSelect(obj.value,toSelId,level);
+		}else{
+			//alert(toSelId);	
+			var defaultvalue="";
+			if(level==1){
+				defaultvalue="全部媒体";
+			}else if(level==2){
+				defaultvalue="全部站点";
+			}else if(level==3){
+				defaultvalue="全部广告位";
+			}
+			 
+			var obj = document.getElementById(toSelId);
+			obj.innerHTML="";
+			var nullOp = document.createElement("option");
+			nullOp.setAttribute("value","");
+			nullOp.appendChild(document.createTextNode(defaultvalue));
+			obj.appendChild(nullOp);		
+		
+			if(level==2){
+				var objslot = document.getElementById("slot");
+				objslot.innerHTML="";
+				var nullOpslot = document.createElement("option");
+				nullOpslot.setAttribute("value","");
+				nullOpslot.appendChild(document.createTextNode(defaultvalue));
+				objslot.appendChild(nullOpslot);
+			}
+		
+		}
+		
+	}
+
+
+	function setSelect(fromSelVal,toSelId,level){ 	
+	 
+		jQuery.ajax({
+		  url: "/ssp/logs/adCountPub/listPub",
+		  cache: false,
+		  data:"parentid="+fromSelVal+"&level="+level,
+		  success: function(data){
+		  	document.getElementById(toSelId).innerHTML="";
+		    createSelectObj(data,toSelId,level);
+		  }
+		});
+	}
+
+	function createSelectObj(data,toSelId,level){
+		
+		var arr = jsonParse(data);
+		if(arr != null && arr.length>0){
+			var defaultvalue="";
+			if(level==1){
+				defaultvalue="全部媒体";
+			}else if(level==2){
+				defaultvalue="全部站点";
+			}else if(level==3){
+				defaultvalue="全部广告位";
+			}
+			
+			var obj = document.getElementById(toSelId);
+			obj.innerHTML="";
+			var nullOp = document.createElement("option");
+			nullOp.setAttribute("value","");
+			nullOp.appendChild(document.createTextNode(defaultvalue));
+			obj.appendChild(nullOp);
+			for(var o in arr){
+				var op = document.createElement("option");
+				op.setAttribute("value",arr[o].id);
+				//op.text=arr[o].name;//这一句在ie下不起作用，用下面这一句或者innerHTML
+				op.appendChild(document.createTextNode(arr[o].name));
+				obj.appendChild(op);
+			}
+			
+		}
+	}
+
+
+</script>
+
+
+<script>
+
+$(document).ready(function() {
+ 
+// 	$('.date-picker').val(new Date().format("yyyy-MM-dd")).datepicker();
+function GetDateStr(AddDayCount) { 
+	var dd = new Date(); 
+	dd.setDate(dd.getDate()+AddDayCount);//获取AddDayCount天后的日期 
+	var y = dd.getFullYear(); 
+	var m = dd.getMonth()+1;//获取当前月份的日期 
+	var d = dd.getDate(); 
+	return y+"-"+m+"-"+d; 
+} 
+	var cbd = function(start, end, label) {
+		otable.fnDraw();
+      };
+
+      var optionSet2 = {
+  			singleDatePicker:true,
+  	        format: 'YYYY-MM-DD',
+  	        locale: {
+  	            daysOfWeek: ['日', '一', '二', '三', '四', '五','六'],
+  	            monthNames: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
+  	            firstDay: 1
+  	        }
+  	      };
+      $('.date-picker').val(GetDateStr(-3)).daterangepicker(optionSet2,cbd);  
+
+ 	setSelect('0','pub','1');
+
+	var otable = TableAjax.init('data_table_ssp_logs_adSspDataCount_1',{
+// 		 buttons:[{
+// //				extend: 'columnsToggle',
+// 				extend: 'colvis',
+// 				collectionLayout: 'fixed two-column',
+// 				columns: ':not(:first-child)'
+// 			}],
+		 sAjaxSource: "/ssp/logs/rsIncomeSlot/listJSON",
+		 aaSorting: [[2, "desc" ]], // 需要自定义
+// 		 uxUrlPrev:"/ssp/logs/adStat/",
+		 uxDataTitle:"",
+		 uxCheckable:false,
+		 uxCloseScroll:false,
+		 uxDrapable:false,
+		 uxSumConfig:{
+			 title:{
+				 text:'总计',
+				 cols:[
+				 	0,1
+				 ]
+			 },
+			 hiddenCols:[5,8,10]
+		 },
+		 aoColumns: [		
+				{ "sTitle":"媒体","mData": "pub_name" ,"sWidth": "150px",uxCutText:50},
+				{ "sTitle":"广告位","mData": "slot_name","sWidth": "150px",uxCutText:50},
+				{ "sTitle":"请求数","mData": "ra","sWidth": "100px",uxNumber:true,uxSum:true},
+				{ "sTitle":"展示数","mData": "pv","sWidth": "100px",uxNumber:true,uxSum:true},
+				{ "sTitle":"点击数","mData": "cli","sWidth": "100px",uxNumber:true,uxSum:true},
+				{ "sTitle":"点击率(%)","mData": "cli","sWidth": "100px", bSortable:false,mRender:function(d,i,all){
+					return Common.toThousands(all.cli/all.pv*100,2);
+				},sClass : "ux-number"},
+				{ "sTitle":"用户量","mData": "uv","sWidth": "100px",uxNumber:true,uxSum:true},
+				{ "sTitle":"IP量","mData": "ip","sWidth": "100px",uxNumber:true,uxSum:true},
+				{ "sTitle":"CPM(元)","mData": "final_price","sWidth": "100px",uxNumber:true},
+// 				{ "sTitle":"CPC(元)","mData":"cpc","sWidth": "100px"},
+				{ "sTitle":"收入(元)","mData": "final_income","sWidth": "100px",uxNumber:true,uxSum:true},
+				{ "sTitle":"ARPU值","mData": null,defaultContent:"","sWidth": "100px",uxNumber:true}
+				 
+	        ]
+	});
+	
+
+	 
+});                           
+</script>

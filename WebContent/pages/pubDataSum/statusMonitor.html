@@ -1,0 +1,279 @@
+<!-- BEGIN PAGE CONTENT-->
+<!-- BEGIN ROW CONTENT-->
+<div class="row">
+	<div class="col-md-12">
+		<div class="widget-header bordered-bottom  bordered-lightred">
+                <i class="widget-icon fa fa-tasks "></i>
+                <span class="widget-caption ">监控数据</span>       
+				<div id="page-params"   style="background: #fff; border: 0px solid #ccc;padding:5px;margin:0px">
+					<select name="pub_id" id="pub" onchange="onSelectChange(this,'site','2');">
+					</select>
+					<select name="site_id" id="site" onchange="onSelectChange(this,'slot','3');" style="width:120px;margin-right:50px" >
+					<option value="">全部站点</option>
+					</select>
+					<select name="slot_id" id="slot" style="width:200px;margin-right:50px" >
+					<option value="">全部广告位</option>
+					</select>	
+					<span class=""> <i class="fa fa-calendar"></i> </span>&nbsp; 
+					<input class="date-picker" id="id-date-picker-2" type="text" name="statdate" data-date-format="yyyy-mm-dd" 
+					style="width:100px;margin-right:50px;font-size: 13px;color: #858585;background-color: #fbfbfb;border: 1px solid #d5d5d5; padding: 6px 12px;" value="2015-11-21">
+					<a class="btn btn-primary btn-sm" style="margin-right:10px;">查询</a>          
+          		</div>
+           <!--Widget Header-->
+		</div>
+		<div class="widget-body">
+			<table class="table table-condensed table-bordered table-hover " id="data_table_ssp_logs_adSspDataCount_1"></table>
+		</div>
+		
+	</div>
+	<div style="display:none"><div id="myModal">
+		<div  ms-controller="pubDataSum">
+		<table class="table table-condensed table-bordered table-hover ">
+			<tr ><td style="width:200px;">广告位</td><td></td></tr>
+			<tr ><td>生效总次数</td><td></td></tr>
+			<tr ><td>UV频次</td><td></td></tr>
+			<tr ><td>UV频次间隔</td><td></td></tr>
+			<tr ><td>IP频次</td><td></td></tr>
+			<tr ><td>IP频次间隔</td><td></td></tr>
+			<tr ><td>UA为空</td><td></td></tr>
+			<tr ><td>REFERER为空</td><td></td></tr>
+			<tr ><td>IP黑名单</td><td></td></tr>
+			<tr ><td>UV黑名单</td><td></td></tr>
+		</table>
+	</div>
+	</div></div>
+</div>
+		
+<style>
+.modal-backdrop.in{
+	opacity: .5;
+	background-color: #000;
+}
+body, body.modal {
+    padding-right: 0 !important;
+}
+
+body.modal {
+    overflow-y: hidden;
+}
+.bootbox.modal table td{
+	padding-left:50px;
+}
+
+.onViewTr{
+	background-color:#f5f5f5;
+}
+</style>
+
+<script type="text/javascript">
+
+	function onSelectChange(obj,toSelId,level){
+		//alert(obj.value);
+		if(obj.value!=""){
+			setSelect(obj.value,toSelId,level);
+		}else{
+			//alert(toSelId);	
+			var defaultvalue="";
+			if(level==1){
+				defaultvalue="全部媒体";
+			}else if(level==2){
+				defaultvalue="全部站点";
+			}else if(level==3){
+				defaultvalue="全部广告位";
+			}
+			 
+			var obj = document.getElementById(toSelId);
+			obj.innerHTML="";
+			var nullOp = document.createElement("option");
+			nullOp.setAttribute("value","");
+			nullOp.appendChild(document.createTextNode(defaultvalue));
+			obj.appendChild(nullOp);		
+		
+			if(level==2){
+				var objslot = document.getElementById("slot");
+				objslot.innerHTML="";
+				var nullOpslot = document.createElement("option");
+				nullOpslot.setAttribute("value","");
+				nullOpslot.appendChild(document.createTextNode(defaultvalue));
+				objslot.appendChild(nullOpslot);
+			}
+		
+		}
+		
+	}
+
+
+	function setSelect(fromSelVal,toSelId,level){ 	
+	 
+		jQuery.ajax({
+		  url: "/ssp/logs/adCountPub/listPub",
+		  cache: false,
+		  data:"parentid="+fromSelVal+"&level="+level,
+		  success: function(data){
+		  	document.getElementById(toSelId).innerHTML="";
+		    createSelectObj(data,toSelId,level);
+		  }
+		});
+	}
+
+	function createSelectObj(data,toSelId,level){
+		
+		var arr = jsonParse(data);
+		if(arr != null && arr.length>0){
+			var defaultvalue="";
+			if(level==1){
+				defaultvalue="全部媒体";
+			}else if(level==2){
+				defaultvalue="全部站点";
+			}else if(level==3){
+				defaultvalue="全部广告位";
+			}
+			
+			var obj = document.getElementById(toSelId);
+			obj.innerHTML="";
+			var nullOp = document.createElement("option");
+			nullOp.setAttribute("value","");
+			nullOp.appendChild(document.createTextNode(defaultvalue));
+			obj.appendChild(nullOp);
+			for(var o in arr){
+				var op = document.createElement("option");
+				op.setAttribute("value",arr[o].id);
+				//op.text=arr[o].name;//这一句在ie下不起作用，用下面这一句或者innerHTML
+				op.appendChild(document.createTextNode(arr[o].name));
+				obj.appendChild(op);
+			}
+			
+		}
+	}
+
+
+</script>
+
+
+<script>
+
+$(document).ready(function() {
+ 
+	$('.date-picker').val(new Date().format("yyyy-MM-dd")).datepicker();
+ 	setSelect('0','pub','1');
+
+ 	function queryParams(d){
+ 		column = d.columns[d.order['0']['column']]
+ 		if(column['orderable']){
+ 			o = column['data'];
+ 			desc = d.order[0]['dir'];
+ 			d["o"] = o;
+ 			d["desc"] = desc;
+ 		}	
+ 		d.columns = {};	
+ 		p = $("#page-params input,#page-params select").serializeArray();
+ 		k = ""
+ 		$.each(p,function(){
+ 			k==""? k += this.name : k += ","+this.name;
+ 			d[this.name] = this.value;
+ 		})
+ 		d.k = k;	
+ 		d.iDisplayLength = d.length;
+ 		d.iDisplayStart = d.start;
+ 	}
+
+ 	function createDataTable(url,tableid){
+		tableid = $("#tableid").val() || tableid;
+		return $('#'+tableid).dataTable( {
+			"multiselect":true,
+			"bProcessing": false, //当datatable获取数据时候是否显示正在处理提示信息。
+			"bServerSide": true, //服务端处理数据
+			"bSort" :true,
+			"ajax": {
+			    "url": url,
+			    "data": queryParams
+			},
+			"drawCallback": function( settings ) {Notify('查询成功', 'top-right', '100', 'success', 'fa-check', true);},
+			"bLengthChange": false,
+			"bFilter":false,
+			"iDisplayLength":10,
+			"oLanguage": {	 		
+					"sProcessing" : "正在加载数据...",
+	              	"sLengthMenu": "每页显示  _MENU_ 条记录",  
+	              	"sInfo": "从 _START_ 到 _END_ /共 _TOTAL_ 条数据",
+	              	"oPaginate": {
+	                	"sFirst": "首页",
+	                	"sPrevious": "前一页",
+	                	"sNext": "后一页",
+	                	"sLast": "尾页"
+	                },
+					"sInfoFiltered": "数据表中共为 _MAX_ 条记录", 
+	              	"sZeroRecords": "抱歉， 没有找到",
+	              	"sInfoEmpty": "没有数据"
+	            },
+				"aoColumns": [	
+					{ "sTitle":"时间","mData": "statdate" },
+					{ "sTitle":"媒体","mData": "pub_id"},
+					{ "sTitle":"广告位","mData": "slot_id"},
+					{ "sTitle":"请求数","mData": "request_success_count"},
+					{ "sTitle":"展示数","mData": "show_count"},
+					{ "sTitle":"点击数","mData": "click_count"},
+					
+					{ "sTitle":"投放黑名单","mData": "blacklist_count"},
+					{ "sTitle":"UV频次","mData": "uv_times"},
+					{ "sTitle":"IP频次","mData": "ip_times"},
+					{ "sTitle":"请求错误","mData": "request_err",},
+					{ "sTitle":"流量质量","mData": null,defaultContent:""},
+					{ "sTitle":"防作弊数据","mData": "cheat_control_total",render:function(val){						
+						s = '<a href="javascript:void(0)" onclick="openDetail(this)">查看</a>（'+val+'）';
+						return s;
+					}},
+
+                ]
+	
+		} );
+	}
+
+	window.otable2 = createDataTable("/Platform/readrow?dataType=datatable&pageid=C6C7B0F76F700001B697130D178HJ790","data_table_ssp_logs_adSspDataCount_1")
+	$("#page-params .btn").click(function( event ) {
+		otable2.fnDraw();        
+	});
+});    
+
+function openDetail(obj){
+ 	data = otable2.fnGetData($(obj).parents("tr")[0]);
+ 	$(".onViewTr").removeClass("onViewTr");
+ 	$(obj).parents("tr").addClass("onViewTr");
+ 	pubDataSumOpen(obj,data);
+}  
+
+
+var pubDataSumOpen = function(obj,d){
+	$("#myModal tr td:last-child").each(function(i){
+		switch(i){
+			case 0:$(this).text(d.slot_id);break;
+			case 1:$(this).text(d.cheat_control_total);break;
+			case 2:$(this).text(d.c_uv_times);break;
+			case 3:$(this).text(d.c_uv_time_interval);break;
+			case 4:$(this).text(d.c_ip_times);break;
+			case 5:$(this).text(d.c_ip_time_interval);break;
+			case 6:$(this).text(d.c_null_ua);break;
+			case 7:$(this).text(d.c_null_referer);break;
+			case 8:$(this).text(d.c_ip_blacklist);break;
+			case 9:$(this).text(d.c_uv_blacklist);break;
+		}		
+	});
+	
+	bootbox.dialog({
+        message: $("#myModal").html(),
+        title: "防作弊数据详细",
+        className: " modal-primary",
+        buttons: {
+            success: {
+                label: "关闭",
+                className: "btn-lightred",
+                callback: function () {
+                	
+            	}
+            }
+        }
+    });	
+
+}
+               
+</script>

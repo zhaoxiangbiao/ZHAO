@@ -1,0 +1,6 @@
+../assets/plugins/bootstrap/css/bootstrap.min.css
+../assets/plugins/font-awesome/css/font-awesome.min.css
+../assets/plugins/jquery-grumble/css/grumble.min.css
+../assets/css/style-metronic.css
+../assets/css/style.css
+../assets/css/pages/login-soft.css

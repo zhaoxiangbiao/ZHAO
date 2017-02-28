@@ -46,7 +46,7 @@ public class AppGroupsAction extends BaseAction{
 	 */
 	@RequestMapping("/listPage")
 	public String listPage(HttpServletRequest request,Model model){
-		
+		System.out.println("");
 		return SessionUtil.getViewPath("/everad/conf/appGroups/listPage");
 	}
 	

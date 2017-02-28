@@ -45,7 +45,7 @@ public class AppBlacklistAction extends BaseAction{
 	 */
 	@RequestMapping("/listPage")
 	public String listPage(HttpServletRequest request,Model model){
-		
+		System.out.println("aaa");
 		return SessionUtil.getViewPath("/everad/conf/appBlacklist/listPage");
 	}
 	
